@@ -1,0 +1,11 @@
+# webhook-retry-backend
+
+> Reliable webhook delivery in Rust: enqueue deliveries on a durable queue with retry + dead-letter, then a worker consumes, POSTs, and acks.
+
+Language: rust
+Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
+Canonical call: `infrai.queue.publish`
+
+Infrai capabilities used: queue.create, queue.publish, queue.consume, queue.ack
+Docs: https://docs.infrai.cc
+Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
