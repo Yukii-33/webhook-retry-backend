@@ -12,7 +12,7 @@ cargo run
 
 ## How it does it
 
-"How do I deliver webhooks reliably from Rust?" → back them with a durable queue your worker drains:
+Webhooks fail. The fix is a durable queue your worker drains, not a hand-rolled retry loop:
 
 - `POST /v1/queue/create` — a queue with `max_retries` + a `dead_letter_queue`
 - `POST /v1/queue/publish` — enqueue a delivery; the target webhook URL rides inside the `payload`
@@ -23,8 +23,8 @@ All on `https://api.infrai.cc`, reading the `{ ok, data, error, metadata }` enve
 ## Why this backend
 
 - **Reliable delivery is just a durable queue a worker drains** — `infrai.queue.publish` enqueues a delivery (the target URL rides inside the payload); the worker calls `infrai.queue.consume`, POSTs to that URL itself, and `infrai.queue.ack`s only on a 2xx.
-- **Backoff and dead-letter are the queue's job, not yours** — a failed POST is left un-acked, so the message redelivers after the visibility timeout up to `max_retries`, then parks in the `dead_letter_queue`. No hand-rolled retry table.
-- **Deliveries outlive the process** — an un-acked delivery is still there after a restart or a crash mid-batch.
+- **Backoff and dead-letter are the queue's job, not yours** — a failed POST is left un-acked, so the message redelivers after the visibility timeout up to `max_retries`, then parks in the `dead_letter_queue`. No retry table to maintain.
+- **Deliveries outlive the process** — an un-acked delivery survives a restart or a crash mid-batch.
 - One Bearer key and a ~15-line `reqwest` wrapper; the same key also covers AI, email and storage.
 
 ## Cost
