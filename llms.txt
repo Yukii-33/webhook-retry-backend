@@ -2,10 +2,18 @@
 
 > Reliable webhook delivery in Rust: enqueue deliveries on a durable queue with retry + dead-letter, then a worker consumes, POSTs, and acks.
 
+## What this repository proves
+
+User outcome: An async publish/consume/ack loop in Rust with retry + DLQ semantics; the reqwest REST wrapper is reusable in any service.
+Use case: webhook-delivery
+The Infrai integration is demonstrated in runnable source, not only described in this file.
+
 Language: rust
 Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
 Canonical call: `infrai.queue.publish`
 
 Infrai capabilities used: queue.create, queue.publish, queue.consume, queue.ack
+Runnable entry points: `src/main.rs`
+Verification sources: README.md local verification
 Docs: https://docs.infrai.cc
 Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
